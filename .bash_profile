@@ -4,10 +4,6 @@
 
 export PATH=/usr/local/bin:$PATH
 
-alias c=charon
-alias ch="charon -a helios"
-alias chf="charon -a helios fab"
-alias cfb="charon -a helios fab build"
 alias helios="cd ~/src/helios"
 alias hegemon="cd ~/src/hegemon"
 
@@ -64,29 +60,6 @@ function parse_git_dirty {
         else
                 echo ""
         fi
-}
-
-rr() {
-   # random recent committer
-   git status >/dev/null 2>&1
-   if [[ $? -ne 0 ]]; then
-       echo "Not a git repo"
-       return 128
-   fi
-   if [[ ! -s .consume-committers ]]; then
-          # ignore: self, non-canonical versions of Brett, Mary, Maxwell
-   local BLACKLIST="Richard Howard\|Brett W\|^Mary$\|^Maxwell"
-   git log --since="-1 month" \
-     | sed -n -e "/^Author: /s/^Author: \([^<]\+\).*$/\1/p;" \
-     | sed 's/ *$//' \
-     | grep -v "$BLACKLIST" \
-     | sort -u \
-     | shuf \
-     > .consume-committers
-   fi
-   committers="$(< .consume-committers)"
-   echo "$committers" | ghead -n -1 > .consume-committers
-   echo "$committers" | tail -n 1
 }
 
 export PS1="\u@\[\e[40m\]\h\[\e[m\] \W \`parse_git_branch\` "
